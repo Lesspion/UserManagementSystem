@@ -1,0 +1,13 @@
+title = "User Manager"
+
+[owner]
+name = "pawndev"
+
+[database]
+type = "mongodb"
+server = "localhost"
+ports = 27017
+enabled = true
+
+[servers]
+port = 8000
