@@ -3,6 +3,7 @@ package Core
 import (
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/BurntSushi/toml"
 )
@@ -17,12 +18,12 @@ type Config struct {
 type database struct {
 	DB      string
 	Host    string
-	Port    int
+	Port    uint8
 	Enabled bool
 }
 
 type server struct {
-	Port int
+	Port uint8
 }
 
 type owner struct {
@@ -75,10 +76,42 @@ func mergeConfig(defaultConf Config, currentConf Config) Config {
 }
 
 func NewConfig() Config {
+	db := database{DB: getEnv("UMS_DATBASE_DB", "mongodb"), Host: getEnv("UMS_DATBASE_HOST", "localhost"), Port: getUint8Env("UMS_DATABASE_PORT", "27017"), Enabled: getBoolEnv("UMS_DATBASE_ENABLED", "true")}
+
+	Server := server{Port: getUint8Env("UMS_SERVER_PORT", "8080")}
+
+	Owner := owner{Name: getEnv("UMS_OWNER_NAME", "pawndev")}
+
 	return Config{
-	// title: os.Getenv("UMS_TITLE"),
-	// db:    os.Getenv("UMS_DB"),
-	// host:  os.Getenv("UMS_DB_HOST"),
-	// port:  os.Getenv("UMS_DB_PORT"),
+		Title:    getEnv("UMS_TITLE", "UMS"),
+		Database: db,
+		Server:   Server,
+		Owner:    Owner,
 	}
+}
+
+func getEnv(key, defaultValue string) string {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		return defaultValue
+	}
+	return value
+}
+
+func getBoolEnv(key, defaultValue string) bool {
+	env, err := strconv.ParseBool(getEnv(key, defaultValue))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return env
+}
+
+func getUint8Env(key, defaultValue string) uint8 {
+	env, err := strconv.ParseUint(getEnv(key, defaultValue), 10, 8)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return uint8(env)
 }
