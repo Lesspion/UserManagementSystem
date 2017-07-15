@@ -18,8 +18,7 @@ import (
 // )
 
 func main() {
-	fmt.Printf("Boulou")
-	conf := Core.GetConfig("config.toml")
+	conf := Core.GetConfig("./config.toml")
 	fmt.Printf("%+v\n", conf)
 	// session, err := mgo.Dial("localhost")
 }

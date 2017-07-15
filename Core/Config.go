@@ -1,7 +1,6 @@
 package Core
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -9,25 +8,25 @@ import (
 )
 
 type Config struct {
-	title    string
-	owner    owner
-	database database
-	server   server
+	Title    string
+	Owner    owner
+	Database database
+	Server   server
 }
 
 type database struct {
-	db      string
-	host    string
-	port    int
-	enabled bool
+	DB      string
+	Host    string
+	Port    int
+	Enabled bool
 }
 
 type server struct {
-	port int
+	Port int
 }
 
 type owner struct {
-	name string
+	Name string
 }
 
 func GetConfig(params ...string) Config {
@@ -40,11 +39,11 @@ func GetConfig(params ...string) Config {
 
 	if exists {
 		conf := getConfigFromFile(params[0])
-		fmt.Print("billy")
 		return mergeConfig(defaultConf, conf)
-	} else {
-		return defaultConf
 	}
+
+	return defaultConf
+
 }
 
 func ConfigFileExist(configfile string) bool {
@@ -63,15 +62,14 @@ func getConfigFromFile(fileName string) Config {
 	if _, err := toml.DecodeFile(fileName, &config); err != nil {
 		log.Fatal(err)
 	}
-
 	return config
 }
 
 func mergeConfig(defaultConf Config, currentConf Config) Config {
-	defaultConf.title = currentConf.title
-	defaultConf.database = currentConf.database
-	defaultConf.owner = currentConf.owner
-	defaultConf.server = currentConf.server
+	defaultConf.Title = currentConf.Title
+	defaultConf.Database = currentConf.Database
+	defaultConf.Owner = currentConf.Owner
+	defaultConf.Server = currentConf.Server
 
 	return defaultConf
 }
